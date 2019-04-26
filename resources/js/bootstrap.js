@@ -12,7 +12,7 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
-} catch (e) {}
+} catch (e) { }
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -54,3 +54,18 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+
+import { getCookieValue } from './util'
+
+window.axios = require('axios')
+
+// Ajaxリクエストであることを示すヘッダーを付与する
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+
+window.axios.interceptors.request.use(config => {
+    // クッキーからトークンを取り出してヘッダーに添付する
+    config.headers['X-XSRF-TOKEN'] = getCookieValue('XSRF-TOKEN')
+
+    return config
+})
